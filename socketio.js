@@ -2,6 +2,7 @@ module.exports = function(RED) {
   "use strict";
 
   var io = require('socket.io-client');
+  var colors = require('colors');
 
   /***
   EVENT Config Node
@@ -84,10 +85,42 @@ module.exports = function(RED) {
     socket.on(this.addr, function(message) {
       node.send({payload: message});
     });
+
+    socket.on('error', function (err) {
+      logSocketEvent(`Socket.io error: ${err}.`);
+    });
+
+    socket.on('disconnect', function () {
+      logSocketEvent(`Socket.io disconnected.`);
+    });
+
+    socket.on('reconnect', function (num) {
+      logSocketEvent(`Socket.io reconnected successfuly.`);
+    });
+
+    socket.on('reconnect_attempt', function () {
+      logSocketEvent(`Socket.io attempt to reconnect.`);
+    });
+
+    socket.on('reconnecting', function (num) {
+      logSocketEvent(`Socket.io reconnecting ${num} time.`);
+    });
+
+    socket.on('reconnect_error', function (err) {
+      logSocketEvent(`Socket.io reconnect error: ${err}.`);
+    });
+
+    socket.on('reconnect_failed', function (err) {
+      logSocketEvent(`Socket.io rreconnection failed.`);
+    });
   }
 
   RED.nodes.registerType("socket-io-event", socketIoEvent);
   RED.nodes.registerType("socket-io-server", socketIoServer);
   RED.nodes.registerType("socket-io-out", socketIoOut);
   RED.nodes.registerType("socket-io-in", socketIoIn);
+}
+
+function logSocketEvent(event) {
+  console.log(colors.magenta(event));
 }
