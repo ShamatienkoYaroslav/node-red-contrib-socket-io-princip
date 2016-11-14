@@ -4,4 +4,4 @@
 
 ##### Install 
 
-npm install github:ShamatienkoYaroslav/node-red-contrib-socket-io-princip
+npm install node-red-contrib-socket-io-princip
